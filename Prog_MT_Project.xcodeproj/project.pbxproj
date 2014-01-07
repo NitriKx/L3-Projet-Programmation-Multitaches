@@ -1,0 +1,162 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		14E2DE631879EDE00074ED1E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 14E2DE5F1879EDE00074ED1E /* market_server.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 14E2DE531879EDE00074ED1E;
+			remoteInfo = market_server;
+		};
+		14E2DE7E1879EDEC0074ED1E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 14E2DE7A1879EDEB0074ED1E /* actor_rd.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 14E2DE6E1879EDEB0074ED1E;
+			remoteInfo = actor_rd;
+		};
+		14E2DE991879EE040074ED1E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 14E2DE951879EE040074ED1E /* actor_user.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 14E2DE891879EE040074ED1E;
+			remoteInfo = actor_user;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		14E2DE5F1879EDE00074ED1E /* market_server.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = market_server.xcodeproj; path = market_server/market_server.xcodeproj; sourceTree = "<group>"; };
+		14E2DE7A1879EDEB0074ED1E /* actor_rd.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = actor_rd.xcodeproj; path = actor_rd/actor_rd.xcodeproj; sourceTree = "<group>"; };
+		14E2DE951879EE040074ED1E /* actor_user.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = actor_user.xcodeproj; path = actor_user/actor_user.xcodeproj; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		14E2DE431879EDCE0074ED1E = {
+			isa = PBXGroup;
+			children = (
+				14E2DE951879EE040074ED1E /* actor_user.xcodeproj */,
+				14E2DE7A1879EDEB0074ED1E /* actor_rd.xcodeproj */,
+				14E2DE5F1879EDE00074ED1E /* market_server.xcodeproj */,
+			);
+			sourceTree = "<group>";
+		};
+		14E2DE601879EDE00074ED1E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				14E2DE641879EDE00074ED1E /* market_server */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		14E2DE7B1879EDEB0074ED1E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				14E2DE7F1879EDEC0074ED1E /* actor_rd */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		14E2DE961879EE040074ED1E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				14E2DE9A1879EE040074ED1E /* actor_user */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXProject section */
+		14E2DE441879EDCE0074ED1E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0500;
+			};
+			buildConfigurationList = 14E2DE471879EDCE0074ED1E /* Build configuration list for PBXProject "Prog_MT_Project" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 14E2DE431879EDCE0074ED1E;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 14E2DE7B1879EDEB0074ED1E /* Products */;
+					ProjectRef = 14E2DE7A1879EDEB0074ED1E /* actor_rd.xcodeproj */;
+				},
+				{
+					ProductGroup = 14E2DE961879EE040074ED1E /* Products */;
+					ProjectRef = 14E2DE951879EE040074ED1E /* actor_user.xcodeproj */;
+				},
+				{
+					ProductGroup = 14E2DE601879EDE00074ED1E /* Products */;
+					ProjectRef = 14E2DE5F1879EDE00074ED1E /* market_server.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		14E2DE641879EDE00074ED1E /* market_server */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = market_server;
+			remoteRef = 14E2DE631879EDE00074ED1E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		14E2DE7F1879EDEC0074ED1E /* actor_rd */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = actor_rd;
+			remoteRef = 14E2DE7E1879EDEC0074ED1E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		14E2DE9A1879EE040074ED1E /* actor_user */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = actor_user;
+			remoteRef = 14E2DE991879EE040074ED1E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin XCBuildConfiguration section */
+		14E2DE481879EDCE0074ED1E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		14E2DE491879EDCE0074ED1E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		14E2DE471879EDCE0074ED1E /* Build configuration list for PBXProject "Prog_MT_Project" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				14E2DE481879EDCE0074ED1E /* Debug */,
+				14E2DE491879EDCE0074ED1E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 14E2DE441879EDCE0074ED1E /* Project object */;
+}
