@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "14E2DE881879EE040074ED1E"
-               BuildableName = "actor_user"
-               BlueprintName = "actor_user"
-               ReferencedContainer = "container:actor_user.xcodeproj">
+               BuildableName = "actor"
+               BlueprintName = "actor"
+               ReferencedContainer = "container:actor.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "14E2DE881879EE040074ED1E"
-            BuildableName = "actor_user"
-            BlueprintName = "actor_user"
-            ReferencedContainer = "container:actor_user.xcodeproj">
+            BuildableName = "actor"
+            BlueprintName = "actor"
+            ReferencedContainer = "container:actor.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -52,9 +52,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "14E2DE881879EE040074ED1E"
-            BuildableName = "actor_user"
-            BlueprintName = "actor_user"
-            ReferencedContainer = "container:actor_user.xcodeproj">
+            BuildableName = "actor"
+            BlueprintName = "actor"
+            ReferencedContainer = "container:actor.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -70,9 +70,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "14E2DE881879EE040074ED1E"
-            BuildableName = "actor_user"
-            BlueprintName = "actor_user"
-            ReferencedContainer = "container:actor_user.xcodeproj">
+            BuildableName = "actor"
+            BlueprintName = "actor"
+            ReferencedContainer = "container:actor.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

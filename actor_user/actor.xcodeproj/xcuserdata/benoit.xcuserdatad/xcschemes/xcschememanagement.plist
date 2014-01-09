@@ -7,12 +7,32 @@
 		<key>actor_rd.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
+		<key>actor_user 2.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>actor_user.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>14E2DE6D1879EDEB0074ED1E</key>
+		<key>143D8447187F4E4F001FDF21</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>143D8454187F4E91001FDF21</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>14E2DE881879EE040074ED1E</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -9,6 +9,6 @@
 #ifndef market_server_logger_h
 #define market_server_logger_h
 
-void log(const char* tag, const char* message);
+void _log(const char* tag, const char* message);
 
 #endif

@@ -20,6 +20,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <errno.h>
 
 #define PIPE_MARKET_SERVER_NAME "pipe_marketServer"
 #define PIPE_ACTOR_PREFIX "pipe_client"
@@ -30,6 +31,9 @@ int pipe_marketServerDescriptor = 0;
 int nbActorRegistered;
 struct actorData actorRegisteredData[MAX_ACTOR];
 
+// The boolean controls the listening loop
+int hasToListen = 1;
+
 char *baseDirectory = NULL;
 
 /**
@@ -38,7 +42,7 @@ char *baseDirectory = NULL;
  **/
 void startMarketServer(char *_baseDirectory) {
     
-    log("INFO", "Starting...");
+    _log("INFO", "Starting...");
     
     baseDirectory = _baseDirectory;
     
@@ -47,12 +51,189 @@ void startMarketServer(char *_baseDirectory) {
     pipe_marketServerDescriptor = createAndOpenMarketOrderPipe();
     
     // Initialize the marketfunc engine
-    log("INFO", "Initializing the marketfunc engine...");
+    _log("INFO", "Initializing the marketfunc engine...");
     marketfunc_init(NB_TYPES_ACTIONS);
     
     
 }
 
+/**
+ This method listen to new order (in the marketServer pipe) and call the good handler for each one
+ **/
+void listenForMarketOrder() {
+    
+    struct order *readOrder = malloc(sizeof(struct order));
+    
+    alarm(50000);
+    
+    // Listening loop, waiting for market orders
+    while(hasToListen) {
+        
+        // Read the next market order
+        if(read(pipe_marketServerDescriptor, readOrder, sizeof(struct order)) < 0) {
+            perror("Can not read from the pipe_merketServer ");
+            exit(EXIT_FAILURE);
+        }
+        
+        switch(readOrder->type) {
+            case OT_REGISTER:
+                newActorRegistrationHandler(readOrder->val1);
+                break;
+            case OT_REQUEST_PRICE:
+                sendPriceToActor(readOrder->sender, readOrder->val1);
+                break;
+            case OT_BUY:
+            case OT_SELL:
+                executeOrderAndSendResponseToTheActor(readOrder);
+                break;
+            case OT_ALARM_LOW:
+            case OT_ALARM_HIGH:
+                registerAlarmForActor(readOrder);
+                break;
+        }
+        
+    }
+    
+    free(readOrder);
+}
+
+/**
+ Register an alarm (high/low).
+ @param order the order containing the alarm request information
+ **/
+void registerAlarmForActor (struct order *order) {
+    
+    int actorID = findActorIDUsingActorPID(order->sender);
+    
+    if (order->type == OT_ALARM_HIGH) {
+        actorRegisteredData[actorID].alarmHigh.price = order->val1;
+        actorRegisteredData[actorID].alarmHigh.actionType = order->val2;
+    } else if (order->type == OT_ALARM_LOW) {
+        actorRegisteredData[actorID].alarmLow.price = order->val1;
+        actorRegisteredData[actorID].alarmLow.actionType = order->val2;
+    } else {
+        _log("ERROR", "Invalid alarm type.");
+        return;
+    }
+    
+}
+
+/**
+ Check if the alarms have to be sent to the actors.
+ **/
+void checkAlarmAndSendNotificationsForAllActor () {
+    int i;
+    for (i=0; i < NB_TYPES_ACTIONS; i++) {
+        checkAlarmAndSendNotifications(i);
+    }
+}
+
+/**
+ For an actorID, check if the alarms needs to be send and sends it if needed.
+ @param actorID the ID of the actor
+ **/
+void checkAlarmAndSendNotifications (int actorID) {
+    // Check the high alarm
+    if (get_price(actorRegisteredData[actorID].alarmHigh.actionType) > actorRegisteredData[actorID].alarmHigh.price) {
+        kill(actorRegisteredData[actorID].pid, SIGUSR1);
+    }
+    // Check the high alarm
+    if (get_price(actorRegisteredData[actorID].alarmLow.actionType) < actorRegisteredData[actorID].alarmLow.price) {
+        kill(actorRegisteredData[actorID].pid, SIGUSR2);
+    }
+}
+
+
+/**
+ Execute a buy/sell order. The server will try to buy/sell as many as possible actions considering the maximum/minimum price, and then transmit a transactionReport to the actor.
+ @param order a pointer to the order read by the server containing the informations about transaction
+  **/
+void executeOrderAndSendResponseToTheActor (struct order *order) {
+    
+    int actorID = findActorIDUsingActorPID(order->sender);
+    struct transactionReport report;
+    report.quantity = 0;
+
+    if (order->type == OT_BUY) {
+        int i;
+        int buyPrice;
+        for(i = 0; i < order->val1; i++) {
+            // If the maximum price was good enought
+            if((buyPrice = buy(order->val1, order->val2)) > 0) {
+                report.quantity++;
+                report.totalCost += buyPrice;
+            }
+        }
+        actorRegisteredData[actorID].money -= report.totalCost;
+        
+    } else if (order->type == OT_SELL) {
+        int i;
+        int sellPrice;
+        for(i = 0; i < order->val1; i++) {
+            // If the maximum price was good enought
+            if((sellPrice = sell(order->val1, order->val2)) > 0) {
+                report.quantity++;
+                report.totalCost += sellPrice;
+            }
+        }
+        actorRegisteredData[actorID].money += report.totalCost;
+        
+    } else {
+        _log("ERROR", "Unknown transaction type !");
+        return;
+    }
+
+    sendTransactionReportToActor(&report, actorID);
+    
+    checkAlarmAndSendNotificationsForAllActor ();
+}
+
+/**
+ Send a transaction report to an actor.
+ @param report the transactionReport
+ @param actorID the ID of the actor 
+ **/
+void sendTransactionReportToActor(struct transactionReport *report, int actorID) {
+    write(actorRegisteredData[actorID].pipeDescriptor, report, sizeof(struct transactionReport));
+}
+
+/**
+ Find the ID of the actor with a designated PID.
+ @param actorPID the PID of the actor 
+ @return the ID of the actor designated by the PID
+ **/
+int findActorIDUsingActorPID(int actorPID) {
+    int actorID = -1;
+    int i;
+    for(i = 0; i < nbActorRegistered; i++) {
+        if(actorRegisteredData[i].pid == actorPID) {
+            actorID = i;
+            break;
+        }
+    }
+    return actorID;
+}
+
+/**
+ Send all the prices to the actor designed by its ID (index in the tab)
+ @param actorID the index of the actor in the actor array
+ **/
+void sendAllThePricesToActor(int actorID) {
+    int i = 0;
+    for(i = 0; i < NB_TYPES_ACTIONS; i++) {
+        sendPriceToActor(actorID, i);
+    }
+}
+
+/**
+ Send an action price to the designed actor
+ @param actorID the index of the actor in the actor array
+ @param actionType the action type
+ **/
+void sendPriceToActor(int actorID, int actionType) {
+    int actionPrice = get_price(actionType);
+    write(actorRegisteredData[actorID].pipeDescriptor, &actionPrice, sizeof(int));
+}
 
 /**
  Register a new Actor.
@@ -62,15 +243,14 @@ void newActorRegistrationHandler(int actorPID) {
     
     // Check if the client limit is reached
     if(nbActorRegistered >= MAX_ACTOR) {
-        log("WARNING", "Registered clients limit reached");
+        _log("WARNING", "Registered clients limit reached");
         return;
     }
     
     struct actorData *actorDataStructureToFill = actorRegisteredData + nbActorRegistered;
     actorDataStructureToFill->pid = actorPID;
     actorDataStructureToFill->money = actorPID;
-    actorDataStructureToFill->pid = actorPID;
-    actorDataStructureToFill->pid = actorPID;
+    actorDataStructureToFill->pipeDescriptor = createIfNeededAndOpenActorPipe(actorPID);
     
     nbActorRegistered++;
 }
@@ -84,6 +264,20 @@ int createIfNeededAndOpenActorPipe(int actorPID) {
     
     char *actorPipeFullPath = getActorPipePath(actorPID);
     
+    // Create the pipe
+    int mkfifoExecutionResult;
+    if ((mkfifoExecutionResult = mkfifo(actorPipeFullPath, 0666)) < 0) {
+
+        if(mkfifo(actorPipeFullPath, 0666) == EEXIST) {
+            printf("Communication pipe to actor=[%d] already exists", actorPID);
+            
+        } else {
+            perror("Error when creating a pipe to actor ");
+            exit(EXIT_FAILURE);
+        }
+    }
+    
+    // Open it
     int actorPipeDescriptor = open(actorPipeFullPath, O_WRONLY);
     if(actorPipeDescriptor < 0) {
         perror("Can not open in write mode the actor pipe");
@@ -95,13 +289,25 @@ int createIfNeededAndOpenActorPipe(int actorPID) {
     return actorPipeDescriptor;
 }
 
+
+/**
+ This method will clean all the resources used by the marketServer.
+ **/
+void cleanupFiles() {
+    _log("INFO", "Cleaning up files...");
+    close(pipe_marketServerDescriptor);
+    char *pipeMarketServerPath = getFileinBaseDirectoryPath(PIPE_MARKET_SERVER_NAME);
+    unlink(pipeMarketServerPath);
+    free(pipeMarketServerPath);
+}
+
 /**
  This methos create and open the pipe_marketServer (named pipe).
  @return pipe descriptor
  **/
 int createAndOpenMarketOrderPipe() {
     
-    log("INFO", "Creating pipe_marketServer...");
+    _log("INFO", "Creating pipe_marketServer...");
     
     // Buid the pipe path
     char *pipeMarketServerPath = getFileinBaseDirectoryPath(PIPE_MARKET_SERVER_NAME);
@@ -119,19 +325,9 @@ int createAndOpenMarketOrderPipe() {
         exit(EXIT_FAILURE);
     }
     
-    return pipeDescriptor;
-}
-
-
-/**
- This method will clean all the resources used by the marketServer.
- **/
-void cleanupFiles() {
-    log("INFO", "Cleaning up files...");
-    close(pipe_marketServerDescriptor);
-    char *pipeMarketServerPath = getFileinBaseDirectoryPath(PIPE_MARKET_SERVER_NAME);
-    unlink(pipeMarketServerPath);
     free(pipeMarketServerPath);
+    
+    return pipeDescriptor;
 }
 
 

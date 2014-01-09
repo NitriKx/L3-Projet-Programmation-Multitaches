@@ -1,8 +1,8 @@
 //
 //  main.c
-//  actor_user
+//  actor_rd
 //
-//  Created by Benoît Sauvère on 05/01/2014.
+//  Created by Benoît Sauvère on 09/01/2014.
 //  Copyright (c) 2014 Benoît Sauvère. All rights reserved.
 //
 
@@ -11,7 +11,8 @@
 int main(int argc, const char * argv[])
 {
 
-   
+    // insert code here...
+    printf("Hello, World!\n");
     return 0;
 }
 

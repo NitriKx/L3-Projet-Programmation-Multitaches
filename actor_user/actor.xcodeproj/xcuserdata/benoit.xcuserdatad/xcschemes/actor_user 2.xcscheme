@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "14E2DE6D1879EDEB0074ED1E"
-               BuildableName = "actor_rd"
-               BlueprintName = "actor_rd"
-               ReferencedContainer = "container:actor_rd.xcodeproj">
+               BlueprintIdentifier = "143D8447187F4E4F001FDF21"
+               BuildableName = "actor_user"
+               BlueprintName = "actor_user"
+               ReferencedContainer = "container:actor.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,10 +32,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "14E2DE6D1879EDEB0074ED1E"
-            BuildableName = "actor_rd"
-            BlueprintName = "actor_rd"
-            ReferencedContainer = "container:actor_rd.xcodeproj">
+            BlueprintIdentifier = "143D8447187F4E4F001FDF21"
+            BuildableName = "actor_user"
+            BlueprintName = "actor_user"
+            ReferencedContainer = "container:actor.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -51,10 +51,10 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "14E2DE6D1879EDEB0074ED1E"
-            BuildableName = "actor_rd"
-            BlueprintName = "actor_rd"
-            ReferencedContainer = "container:actor_rd.xcodeproj">
+            BlueprintIdentifier = "143D8447187F4E4F001FDF21"
+            BuildableName = "actor_user"
+            BlueprintName = "actor_user"
+            ReferencedContainer = "container:actor.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -69,10 +69,10 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "14E2DE6D1879EDEB0074ED1E"
-            BuildableName = "actor_rd"
-            BlueprintName = "actor_rd"
-            ReferencedContainer = "container:actor_rd.xcodeproj">
+            BlueprintIdentifier = "143D8447187F4E4F001FDF21"
+            BuildableName = "actor_user"
+            BlueprintName = "actor_user"
+            ReferencedContainer = "container:actor.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
