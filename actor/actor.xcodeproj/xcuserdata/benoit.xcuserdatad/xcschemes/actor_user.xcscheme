@@ -32,9 +32,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "14E2DE881879EE040074ED1E"
-            BuildableName = "actor"
-            BlueprintName = "actor"
+            BlueprintIdentifier = "143D8447187F4E4F001FDF21"
+            BuildableName = "actor_user"
+            BlueprintName = "actor_user"
             ReferencedContainer = "container:actor.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -51,9 +51,9 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "14E2DE881879EE040074ED1E"
-            BuildableName = "actor"
-            BlueprintName = "actor"
+            BlueprintIdentifier = "143D8447187F4E4F001FDF21"
+            BuildableName = "actor_user"
+            BlueprintName = "actor_user"
             ReferencedContainer = "container:actor.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
