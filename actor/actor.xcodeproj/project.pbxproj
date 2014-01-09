@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		143D8458187F4E91001FDF21 /* main_rd.c in Sources */ = {isa = PBXBuildFile; fileRef = 143D8457187F4E91001FDF21 /* main_rd.c */; };
 		143D845E187F4EB8001FDF21 /* main_user.c in Sources */ = {isa = PBXBuildFile; fileRef = 143D844A187F4E4F001FDF21 /* main_user.c */; };
+		143D8472187F51D8001FDF21 /* marketfunc.c in Sources */ = {isa = PBXBuildFile; fileRef = 143D846E187F51D8001FDF21 /* marketfunc.c */; };
+		143D8473187F51D8001FDF21 /* marketfunc.c in Sources */ = {isa = PBXBuildFile; fileRef = 143D846E187F51D8001FDF21 /* marketfunc.c */; };
+		143D8474187F51D8001FDF21 /* transmission.c in Sources */ = {isa = PBXBuildFile; fileRef = 143D8470187F51D8001FDF21 /* transmission.c */; };
+		143D8475187F51D8001FDF21 /* transmission.c in Sources */ = {isa = PBXBuildFile; fileRef = 143D8470187F51D8001FDF21 /* transmission.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -37,6 +41,10 @@
 		143D844A187F4E4F001FDF21 /* main_user.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main_user.c; sourceTree = "<group>"; };
 		143D8455187F4E91001FDF21 /* actor_rd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = actor_rd; sourceTree = BUILT_PRODUCTS_DIR; };
 		143D8457187F4E91001FDF21 /* main_rd.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main_rd.c; sourceTree = "<group>"; };
+		143D846E187F51D8001FDF21 /* marketfunc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = marketfunc.c; sourceTree = "<group>"; };
+		143D846F187F51D8001FDF21 /* marketfunc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = marketfunc.h; sourceTree = "<group>"; };
+		143D8470187F51D8001FDF21 /* transmission.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = transmission.c; sourceTree = "<group>"; };
+		143D8471187F51D8001FDF21 /* transmission.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = transmission.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,17 +81,21 @@
 			path = actor_rd;
 			sourceTree = "<group>";
 		};
-		143D845F187F4EDA001FDF21 /* common */ = {
+		143D846D187F51D8001FDF21 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				143D846E187F51D8001FDF21 /* marketfunc.c */,
+				143D846F187F51D8001FDF21 /* marketfunc.h */,
+				143D8470187F51D8001FDF21 /* transmission.c */,
+				143D8471187F51D8001FDF21 /* transmission.h */,
 			);
-			name = common;
+			path = common;
 			sourceTree = "<group>";
 		};
 		14E2DE801879EE040074ED1E = {
 			isa = PBXGroup;
 			children = (
-				143D845F187F4EDA001FDF21 /* common */,
+				143D846D187F51D8001FDF21 /* common */,
 				143D8449187F4E4F001FDF21 /* actor_user */,
 				143D8456187F4E91001FDF21 /* actor_rd */,
 				14E2DE8A1879EE040074ED1E /* Products */,
@@ -169,6 +181,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				143D845E187F4EB8001FDF21 /* main_user.c in Sources */,
+				143D8474187F51D8001FDF21 /* transmission.c in Sources */,
+				143D8472187F51D8001FDF21 /* marketfunc.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -177,6 +191,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				143D8458187F4E91001FDF21 /* main_rd.c in Sources */,
+				143D8475187F51D8001FDF21 /* transmission.c in Sources */,
+				143D8473187F51D8001FDF21 /* marketfunc.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,6 +313,7 @@
 				143D8450187F4E4F001FDF21 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		143D845B187F4E91001FDF21 /* Build configuration list for PBXNativeTarget "actor_rd" */ = {
 			isa = XCConfigurationList;
@@ -305,6 +322,7 @@
 				143D845D187F4E91001FDF21 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		14E2DE841879EE040074ED1E /* Build configuration list for PBXProject "actor" */ = {
 			isa = XCConfigurationList;

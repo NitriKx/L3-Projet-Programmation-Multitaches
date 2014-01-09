@@ -30,7 +30,7 @@ void fluctuation(struct action_type *at, int operation){
 }
 
 int marketfunc_init(int _nb_action_type){
-  int i,res;
+  long i,res;
   char c='a';
   srandom(getpid());
   nb_action_type = _nb_action_type;
@@ -105,7 +105,7 @@ void marketfunc_terminate(){
 
 void lock(){
   char c;
-  int res = read(pipe_lock[0], &c, sizeof(char));
+  long res = read(pipe_lock[0], &c, sizeof(char));
   if (res == -1) {
     perror("Error lock");
     exit(1);
@@ -114,7 +114,7 @@ void lock(){
 
 void unlock(){
   char c='a';
-  int res = write(pipe_lock[1], &c, sizeof(char));
+  long res = write(pipe_lock[1], &c, sizeof(char));
   if (res == -1) {
     perror("Error unlock");
     exit(1);
