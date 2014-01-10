@@ -14,7 +14,7 @@
  @param pipe_marketServer a file descriptor of the market server pipe
  @param pipe_serverResponse  a file descriptor of the server response pipe
  **/
-int* sendRegisterOrder(int pipe_marketServer, int pipe_serverResponse);
+int* sendRegisterOrder(int pipe_marketServer, int *pipe_serverResponse);
 
 /**
  Blocking - Send a buy order to the market server.

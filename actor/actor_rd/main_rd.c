@@ -56,7 +56,7 @@ void initialize () {
     pipe_marketOrder = openMarketOrderPipe();
     createActorPipe(getpid());
 
-    currentPrices = sendRegisterOrder(pipe_marketOrder, pipe_serverResponse);
+    currentPrices = sendRegisterOrder(pipe_marketOrder, &pipe_serverResponse);
     
     values.money = ACTOR_INITIAL_MONEY;
     values.pipeDescriptor = pipe_serverResponse;

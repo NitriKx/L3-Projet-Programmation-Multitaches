@@ -179,7 +179,8 @@ void executeOrderAndSendResponseToTheActor (struct order *order) {
         int buyPrice;
         for(i = 0; i < order->val1; i++) {
             // If the maximum price was good enought
-            if((buyPrice = buy(order->val1, order->val2)) > 0) {
+            //TODO: replace 1 with the good actionType
+            if((buyPrice = buy(0, order->val2)) > 0) {
                 report.quantity++;
                 report.totalCost += buyPrice;
             }
@@ -191,7 +192,8 @@ void executeOrderAndSendResponseToTheActor (struct order *order) {
         int sellPrice;
         for(i = 0; i < order->val1; i++) {
             // If the maximum price was good enought
-            if((sellPrice = sell(order->val1, order->val2)) > 0) {
+            //TODO: replace 1 with the good actionType
+            if((sellPrice = sell(0, order->val2)) > 0) {
                 report.quantity++;
                 report.totalCost += sellPrice;
             }
@@ -252,7 +254,11 @@ void sendAllThePricesToActor(int actorID) {
  **/
 void sendPriceToActor(int actorID, int actionType) {
     int actionPrice = get_price(actionType);
-    write(actorRegisteredData[actorID].pipeDescriptor, &actionPrice, sizeof(int));
+    if(write(actorRegisteredData[actorID].pipeDescriptor, &actionPrice, sizeof(int)) <= 0) {
+        char logMessage[1024];
+        sprintf(logMessage, "Can not send the price to actor=[%d] for action=[%d]. Reason=[%s].", actorID, actionPrice, strerror(errno));
+        _log("ERROR", logMessage);
+    }
 }
 
 /**
@@ -271,19 +277,22 @@ void newActorRegistrationHandler(int actorPID) {
         return;
     }
     
-    struct actorData *actorDataStructureToFill = actorRegisteredData + nbActorRegistered;
+    struct actorData *actorDataStructureToFill = &actorRegisteredData[nbActorRegistered];
     actorDataStructureToFill->pid = actorPID;
     actorDataStructureToFill->money = ACTOR_INITIAL_MONEY;
     actorDataStructureToFill->pipeDescriptor = openActorPipe(actorPID);
     
-    nbActorRegistered++;
+    actorDataStructureToFill->alarmHigh.actionType = -1;
+    actorDataStructureToFill->alarmLow.actionType = -1;
     
     _log("INFO", "Client registered. Sending prices...");
     
     // Send the price throught the response pipe
-    sendAllThePricesToActor(actorPID);
+    sendAllThePricesToActor(nbActorRegistered);
     
     _log("INFO", "Prices sent");
+    
+    nbActorRegistered++;
 }
 
 /**
@@ -322,6 +331,8 @@ void cleanupFilesAndPipes() {
     char *pipeMarketServerPath = getFileinBaseDirectoryPath(PIPE_MARKET_SERVER_NAME);
     unlink(pipeMarketServerPath);
     free(pipeMarketServerPath);
+    
+    
     
     int i = 0;
     for (i = 0; i < nbActorRegistered; i++) {
