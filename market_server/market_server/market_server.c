@@ -83,7 +83,7 @@ void listenForMarketOrders() {
         }
         
         char orderDescriptionLoggingMessage[1024];
-        sprintf(orderDescriptionLoggingMessage, "Order recieved : \nSender : %d\nType : %d\nVal1 : %d / Val2 : %d", readOrder->sender, readOrder->type, readOrder->val1, readOrder->val2);
+        sprintf(orderDescriptionLoggingMessage, "Order received : * Sender : %d * Type : %d * Val1 : %d * Val2 : %d", readOrder->sender, readOrder->type, readOrder->val1, readOrder->val2);
         _log("INFO", orderDescriptionLoggingMessage);
         
         switch(readOrder->type) {
@@ -164,6 +164,7 @@ void checkAlarmAndSendNotifications (int actorID) {
 }
 
 
+//TODO: replace 0 with the good actionType
 /**
  Execute a buy/sell order. The server will try to buy/sell as many as possible actions considering the maximum/minimum price, and then transmit a transactionReport to the actor.
  @param order a pointer to the order read by the server containing the informations about transaction
@@ -177,22 +178,40 @@ void executeOrderAndSendResponseToTheActor (struct order *order) {
     if (order->type == OT_BUY) {
         int i;
         int buyPrice;
+        char logMessage[1024];
         for(i = 0; i < order->val1; i++) {
+            
+            // Get the action price to check that if the actor has enought money
+            int currentActionPrice = get_price(0);
+            if(currentActionPrice >= actorRegisteredData[actorID].money) {
+                // NO ENOUGHT CASH
+                sprintf(logMessage, "Actor %d can not buy action=[%d] (current price=[%d] - actor cash=[%d])", actorID, 0, currentActionPrice, actorRegisteredData[actorID].money);
+                _log("INFO", logMessage);
+                continue;
+            }
+            
             // If the maximum price was good enought
-            //TODO: replace 1 with the good actionType
             if((buyPrice = buy(0, order->val2)) > 0) {
+                // OK
                 report.quantity++;
                 report.totalCost += buyPrice;
+                actorRegisteredData[actorID].money -= buyPrice;
+                sprintf(logMessage, "Actor %d buy action=[%d] (current price=[%d] - actor cash after operation=[%d])", actorID, 0, currentActionPrice, actorRegisteredData[actorID].money);
+                _log("INFO", logMessage);
+                
+            } else {
+                // TOO EXPENSIVE
+                
+                sprintf(logMessage, "Actor %d can not buy action=[%d] (buy price=[%d] - maximum price=[%d])", actorID, 0, currentActionPrice, order->val2);
+                _log("INFO", logMessage);
             }
         }
-        actorRegisteredData[actorID].money -= report.totalCost;
         
     } else if (order->type == OT_SELL) {
         int i;
         int sellPrice;
         for(i = 0; i < order->val1; i++) {
             // If the maximum price was good enought
-            //TODO: replace 1 with the good actionType
             if((sellPrice = sell(0, order->val2)) > 0) {
                 report.quantity++;
                 report.totalCost += sellPrice;

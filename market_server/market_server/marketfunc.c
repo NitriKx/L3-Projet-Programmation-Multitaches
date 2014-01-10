@@ -1,4 +1,5 @@
 #include "marketfunc.h"
+#include "logger.h"
 int pipe_lock[2];
 
 struct action_type{
@@ -90,8 +91,10 @@ int sell(int action_type, int minprice){
 }
 
 int get_price(int action_type){
-  printf("function getprice\n");
-  printf("valeur = %d \n", action_types[action_type].action_price);
+  char logMessage[1024];
+  sprintf(logMessage, "function getprice - valeur = %d", action_types[action_type].action_price);
+  _log("DEBUG", logMessage);
+  
   return action_types[action_type].action_price;
 }
 

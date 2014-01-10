@@ -92,7 +92,7 @@ struct transactionReport* sendTransactionOrder(int pipe_marketServer, int pipe_s
     transmitedOrder.val2 = maxPrice;
     
     char logMessage[1024];
-    sprintf(logMessage, "Values :\nSender : %d\nisBuy : %d\nVal1 : %d\nVal2 : %d", transmitedOrder.sender, isBuy, transmitedOrder.val1, transmitedOrder.val2);
+    sprintf(logMessage, "Sender : %d - isBuy : %d - Val1 : %d - Val2 : %d", transmitedOrder.sender, isBuy, transmitedOrder.val1, transmitedOrder.val2);
     _log("INFO", logMessage);
     
     if(isBuy > 0) {
@@ -111,7 +111,7 @@ struct transactionReport* sendTransactionOrder(int pipe_marketServer, int pipe_s
     // We block until we recieve the market server response
     read(pipe_serverResponse, responseReport, sizeof(struct order));
     
-    sprintf(logMessage, "Server response : \nQuantity : %d / Total Cost %d", responseReport->quantity, responseReport->totalCost);
+    sprintf(logMessage, "Server response : Quantity : %d / Total Cost %d", responseReport->quantity, responseReport->totalCost);
     _log("INFO", logMessage);
 
     return responseReport;
