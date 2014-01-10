@@ -40,7 +40,7 @@ void startMarketServer(char *_baseDirectory);
 /**
  This method listen to new order (in the marketServer pipe) and call the good handler for each one
  **/
-void listenForMarketOrder();
+void listenForMarketOrders();
 
 /**
  Register an alarm (high/low).
@@ -126,7 +126,7 @@ char* getActorPipePath(int actorPID);
 /**
  This method will delete all the file used by the marketServer.
 **/
-void cleanupFiles();
+void cleanupFilesAndPipes();
 
 
 #endif

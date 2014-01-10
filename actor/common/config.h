@@ -13,6 +13,8 @@
 #define MAX_ACTOR 1024
 #define ACTOR_INITIAL_MONEY 1000
 
+#define ORDER_DELAY 2000
+
 #define CONFIG_BASE_DIRECTORY "/tmp"
 
 #endif

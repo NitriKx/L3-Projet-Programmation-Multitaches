@@ -9,6 +9,7 @@
 #include "config.h"
 #include "logger.h"
 #include "pipeAndNameManipulation.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -40,7 +41,7 @@ int openMarketOrderPipe() {
     }
     
     // Open it
-    int pipeDescriptor = open(pipeMarketServerPath, O_RDONLY);
+    int pipeDescriptor = open(pipeMarketServerPath, O_WRONLY);
     if (pipeDescriptor <= 0) {
         perror("Can not open the pipe_marketServer");
         exit(EXIT_FAILURE);
@@ -74,9 +75,9 @@ int createAndOpenActorPipe(int actorPID) {
     }
     
     // Open it
-    int actorPipeDescriptor = open(actorPipeFullPath, O_WRONLY);
+    int actorPipeDescriptor = open(actorPipeFullPath, O_RDONLY);
     if(actorPipeDescriptor < 0) {
-        perror("Can not open in write mode the actor pipe");
+        perror("Can not open in read mode the actor pipe");
         exit(EXIT_FAILURE);
     }
     

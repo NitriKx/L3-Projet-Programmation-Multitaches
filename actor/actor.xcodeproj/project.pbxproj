@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		14186D82187F54C80092906A /* logger.c in Sources */ = {isa = PBXBuildFile; fileRef = 14186D80187F54C80092906A /* logger.c */; };
+		14186D88187FCEAD0092906A /* logger.c in Sources */ = {isa = PBXBuildFile; fileRef = 14186D80187F54C80092906A /* logger.c */; };
 		143D8458187F4E91001FDF21 /* main_rd.c in Sources */ = {isa = PBXBuildFile; fileRef = 143D8457187F4E91001FDF21 /* main_rd.c */; };
 		143D845E187F4EB8001FDF21 /* main_user.c in Sources */ = {isa = PBXBuildFile; fileRef = 143D844A187F4E4F001FDF21 /* main_user.c */; };
 		143D8472187F51D8001FDF21 /* marketfunc.c in Sources */ = {isa = PBXBuildFile; fileRef = 143D846E187F51D8001FDF21 /* marketfunc.c */; };
@@ -43,6 +44,7 @@
 		14186D7F187F54C80092906A /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		14186D80187F54C80092906A /* logger.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = logger.c; sourceTree = "<group>"; };
 		14186D81187F54C80092906A /* logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = logger.h; sourceTree = "<group>"; };
+		14186D87187FCD5F0092906A /* marketStructures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = marketStructures.h; sourceTree = "<group>"; };
 		143D8448187F4E4F001FDF21 /* actor_user */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = actor_user; sourceTree = BUILT_PRODUCTS_DIR; };
 		143D844A187F4E4F001FDF21 /* main_user.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main_user.c; sourceTree = "<group>"; };
 		143D8455187F4E91001FDF21 /* actor_rd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = actor_rd; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -101,6 +103,7 @@
 				143D8470187F51D8001FDF21 /* transmission.c */,
 				143D8483187F52CF001FDF21 /* pipeAndNameManipulation.h */,
 				143D8480187F52BF001FDF21 /* pipeAndNameManipulation.c */,
+				14186D87187FCD5F0092906A /* marketStructures.h */,
 			);
 			path = common;
 			sourceTree = "<group>";
@@ -208,6 +211,7 @@
 				143D8458187F4E91001FDF21 /* main_rd.c in Sources */,
 				143D8482187F52BF001FDF21 /* pipeAndNameManipulation.c in Sources */,
 				143D8475187F51D8001FDF21 /* transmission.c in Sources */,
+				14186D88187FCEAD0092906A /* logger.c in Sources */,
 				143D8473187F51D8001FDF21 /* marketfunc.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

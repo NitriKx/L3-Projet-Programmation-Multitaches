@@ -47,33 +47,44 @@ void startMarketServer(char *_baseDirectory) {
     baseDirectory = _baseDirectory;
     
     // Create the pipe used to receive actor requests
-    cleanupFiles();
+    cleanupFilesAndPipes();
     pipe_marketServerDescriptor = createAndOpenMarketOrderPipe();
     
     // Initialize the marketfunc engine
     _log("INFO", "Initializing the marketfunc engine...");
     marketfunc_init(NB_TYPES_ACTIONS);
     
+    listenForMarketOrders();
     
+    _log("INFO", "Cleaning up...");
+    
+    marketfunc_terminate();
+    cleanupFilesAndPipes();
 }
 
 /**
  This method listen to new order (in the marketServer pipe) and call the good handler for each one
  **/
-void listenForMarketOrder() {
+void listenForMarketOrders() {
     
     struct order *readOrder = malloc(sizeof(struct order));
     
-    alarm(50000);
+    // alarm(50000);
     
     // Listening loop, waiting for market orders
     while(hasToListen) {
         
+        _log("INFO", "Waiting for incoming order...");
+        
         // Read the next market order
         if(read(pipe_marketServerDescriptor, readOrder, sizeof(struct order)) < 0) {
-            perror("Can not read from the pipe_merketServer ");
+            perror("Can not read from the pipe_marketServer ");
             exit(EXIT_FAILURE);
         }
+        
+        char orderDescriptionLoggingMessage[1024];
+        sprintf(orderDescriptionLoggingMessage, "Order recieved : \nSender : %d\nType : %d\nVal1 : %d / Val2 : %d", readOrder->sender, readOrder->type, readOrder->val1, readOrder->val2);
+        _log("INFO", orderDescriptionLoggingMessage);
         
         switch(readOrder->type) {
             case OT_REGISTER:
@@ -134,12 +145,21 @@ void checkAlarmAndSendNotificationsForAllActor () {
  **/
 void checkAlarmAndSendNotifications (int actorID) {
     // Check the high alarm
-    if (get_price(actorRegisteredData[actorID].alarmHigh.actionType) > actorRegisteredData[actorID].alarmHigh.price) {
+    int currentPriceHigh = get_price(actorRegisteredData[actorID].alarmHigh.actionType);
+    int currentPriceLow = get_price(actorRegisteredData[actorID].alarmHigh.actionType);
+    
+    if (currentPriceHigh > actorRegisteredData[actorID].alarmHigh.price) {
         kill(actorRegisteredData[actorID].pid, SIGUSR1);
+        char message[1024];
+        sprintf(message, "Sent HIGH ALARM for actor=[%d] - value=[%d]", actorID, currentPriceHigh);
+        _log("INFO", message);
     }
     // Check the high alarm
-    if (get_price(actorRegisteredData[actorID].alarmLow.actionType) < actorRegisteredData[actorID].alarmLow.price) {
+    if (currentPriceLow < actorRegisteredData[actorID].alarmLow.price) {
         kill(actorRegisteredData[actorID].pid, SIGUSR2);
+        char message[1024];
+        sprintf(message, "Sent LOW ALARM for actor=[%d] - value=[%d]", actorID, currentPriceLow);
+        _log("INFO", message);
     }
 }
 
@@ -249,10 +269,13 @@ void newActorRegistrationHandler(int actorPID) {
     
     struct actorData *actorDataStructureToFill = actorRegisteredData + nbActorRegistered;
     actorDataStructureToFill->pid = actorPID;
-    actorDataStructureToFill->money = actorPID;
+    actorDataStructureToFill->money = ACTOR_INITIAL_MONEY;
     actorDataStructureToFill->pipeDescriptor = createIfNeededAndOpenActorPipe(actorPID);
     
     nbActorRegistered++;
+    
+    // Send the price throught the response pipe
+    sendAllThePricesToActor(actorPID);
 }
 
 /**
@@ -293,12 +316,19 @@ int createIfNeededAndOpenActorPipe(int actorPID) {
 /**
  This method will clean all the resources used by the marketServer.
  **/
-void cleanupFiles() {
+void cleanupFilesAndPipes() {
     _log("INFO", "Cleaning up files...");
+    
     close(pipe_marketServerDescriptor);
     char *pipeMarketServerPath = getFileinBaseDirectoryPath(PIPE_MARKET_SERVER_NAME);
     unlink(pipeMarketServerPath);
     free(pipeMarketServerPath);
+    
+    int i = 0;
+    for (i = 0; i < nbActorRegistered; i++) {
+        close(actorRegisteredData[i].pipeDescriptor);
+    }
+    
 }
 
 /**
@@ -319,6 +349,7 @@ int createAndOpenMarketOrderPipe() {
     }
     
     // Open it
+    _log("INFO", "Opening the pipe_marketServer...");
     int pipeDescriptor = open(pipeMarketServerPath, O_RDONLY);
     if (pipeDescriptor <= 0) {
         perror("Can not open the pipe_marketServer");
@@ -340,7 +371,7 @@ char* getFileinBaseDirectoryPath(char *pathInBaseDirectory) {
     unsigned long baseDirectorySize = sizeof(char) * (strlen(baseDirectory));
     unsigned long pathInBaseDirectorySize = sizeof(char) * (strlen(pathInBaseDirectory));
     
-    char *filePath = malloc(sizeof(char) + baseDirectorySize + pathInBaseDirectorySize);
+    char *filePath = malloc(sizeof(char)*2 + baseDirectorySize + pathInBaseDirectorySize);
     memcpy(filePath, baseDirectory, baseDirectorySize);
     filePath[baseDirectorySize] = '/';
     memcpy(filePath+baseDirectorySize+1, pathInBaseDirectory, pathInBaseDirectorySize+1);
