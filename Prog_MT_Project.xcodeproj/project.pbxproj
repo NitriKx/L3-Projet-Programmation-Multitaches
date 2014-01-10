@@ -31,6 +31,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		14186D89188031490092906A /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		143D8464187F515B001FDF21 /* actor.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = actor.xcodeproj; path = actor/actor.xcodeproj; sourceTree = "<group>"; };
 		143D847D187F5203001FDF21 /* Conception.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Conception.xcodeproj; path = Conception/Conception.xcodeproj; sourceTree = "<group>"; };
 		14E2DE5F1879EDE00074ED1E /* market_server.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = market_server.xcodeproj; path = market_server/market_server.xcodeproj; sourceTree = "<group>"; };
@@ -56,6 +57,7 @@
 		14E2DE431879EDCE0074ED1E = {
 			isa = PBXGroup;
 			children = (
+				14186D89188031490092906A /* .gitignore */,
 				143D847D187F5203001FDF21 /* Conception.xcodeproj */,
 				143D8464187F515B001FDF21 /* actor.xcodeproj */,
 				14E2DE5F1879EDE00074ED1E /* market_server.xcodeproj */,
