@@ -203,6 +203,7 @@ void executeOrderAndSendResponseToTheActor (struct order *order) {
                 report.quantity++;
                 report.totalCost += buyPrice;
                 actorRegisteredData[actorID].money -= buyPrice;
+                actorRegisteredData[actorID].nbStocks[0]++;
                 sprintf(logMessage, "Actor %d buy action=[%d] (current price=[%d] - actor cash after operation=[%d])", actorID, 0, currentActionPrice, actorRegisteredData[actorID].money);
                 _log("INFO", logMessage);
                 
@@ -217,12 +218,29 @@ void executeOrderAndSendResponseToTheActor (struct order *order) {
     } else if (order->type == OT_SELL) {
         int i;
         int sellPrice;
+        char logMessage[1024];
         for(i = 0; i < order->val1; i++) {
-            // If the minimum price was good enought
-            if((sellPrice = sell(0, order->val2)) > 0) {
-                report.quantity++;
-                report.totalCost += sellPrice;
+            
+            // Check if the user owns at least one action
+            if(actorRegisteredData[actorID].nbStocks[0] > 0) {
+                // If the minimum price was good enought
+                if((sellPrice = sell(0, order->val2)) > 0) {
+                    report.quantity++;
+                    report.totalCost += sellPrice;
+                    actorRegisteredData[actorID].nbStocks[0]--;
+                } else {
+                    // PRICE TOO LOW
+                    sprintf(logMessage, "Actor %d can not sell action=[%d] (price=[%d] - minimum price=[%d])", actorID, 0, get_price(0), actorRegisteredData[actorID].nbStocks[0]);
+                    _log("INFO", logMessage);
+                }              
+                
+            } else {
+                // NO ENOUGHT ACTION
+                sprintf(logMessage, "Actor %d can not sell action=[%d] (quantity owned=[%d])", actorID, 0, actorRegisteredData[actorID].nbStocks[0]);
+                _log("INFO", logMessage);
             }
+            
+            
         }
         actorRegisteredData[actorID].money += report.totalCost;
         
