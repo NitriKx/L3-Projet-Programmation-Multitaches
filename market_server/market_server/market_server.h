@@ -108,7 +108,7 @@ int createAndOpenMarketOrderPipe();
  @param actorPID the PID of the actor process
  @return a file descriptor on the opened pipe (only write)
  **/
-int createIfNeededAndOpenActorPipe(int actorPID);
+int openActorPipe(int actorPID);
 
 /**
  This method builds the full path for a path relative in the baseDirectory.

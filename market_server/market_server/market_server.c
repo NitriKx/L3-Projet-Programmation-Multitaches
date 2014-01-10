@@ -261,6 +261,10 @@ void sendPriceToActor(int actorID, int actionType) {
  **/
 void newActorRegistrationHandler(int actorPID) {
     
+    char logMessage[1024];
+    sprintf(logMessage, "New actor registration : PID=[%d]", actorPID);
+    _log("INFO", logMessage);
+    
     // Check if the client limit is reached
     if(nbActorRegistered >= MAX_ACTOR) {
         _log("WARNING", "Registered clients limit reached");
@@ -270,12 +274,16 @@ void newActorRegistrationHandler(int actorPID) {
     struct actorData *actorDataStructureToFill = actorRegisteredData + nbActorRegistered;
     actorDataStructureToFill->pid = actorPID;
     actorDataStructureToFill->money = ACTOR_INITIAL_MONEY;
-    actorDataStructureToFill->pipeDescriptor = createIfNeededAndOpenActorPipe(actorPID);
+    actorDataStructureToFill->pipeDescriptor = openActorPipe(actorPID);
     
     nbActorRegistered++;
     
+    _log("INFO", "Client registered. Sending prices...");
+    
     // Send the price throught the response pipe
     sendAllThePricesToActor(actorPID);
+    
+    _log("INFO", "Prices sent");
 }
 
 /**
@@ -283,22 +291,13 @@ void newActorRegistrationHandler(int actorPID) {
  @param actorPID the PID of the actor process
  @return a file descriptor on the opened pipe (only write)
  **/
-int createIfNeededAndOpenActorPipe(int actorPID) {
+int openActorPipe(int actorPID) {
     
     char *actorPipeFullPath = getActorPipePath(actorPID);
     
-    // Create the pipe
-    int mkfifoExecutionResult;
-    if ((mkfifoExecutionResult = mkfifo(actorPipeFullPath, 0666)) < 0) {
-
-        if(mkfifo(actorPipeFullPath, 0666) == EEXIST) {
-            printf("Communication pipe to actor=[%d] already exists", actorPID);
-            
-        } else {
-            perror("Error when creating a pipe to actor ");
-            exit(EXIT_FAILURE);
-        }
-    }
+    char logMessage[1024];
+    sprintf(logMessage, "Opening pipe [%s]...", actorPipeFullPath);
+    _log("INFO", logMessage);
     
     // Open it
     int actorPipeDescriptor = open(actorPipeFullPath, O_WRONLY);
@@ -349,12 +348,14 @@ int createAndOpenMarketOrderPipe() {
     }
     
     // Open it
-    _log("INFO", "Opening the pipe_marketServer...");
+    _log("INFO", "Opening the pipe_marketServer : waiting for client in write mode...");
     int pipeDescriptor = open(pipeMarketServerPath, O_RDONLY);
-    if (pipeDescriptor <= 0) {
+    if (pipeDescriptor < 0) {
         perror("Can not open the pipe_marketServer");
         exit(EXIT_FAILURE);
     }
+    
+    _log("INFO", "pipe_marketServer opened");
     
     free(pipeMarketServerPath);
     

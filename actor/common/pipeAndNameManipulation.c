@@ -29,16 +29,10 @@ char *baseDirectory = CONFIG_BASE_DIRECTORY;
  **/
 int openMarketOrderPipe() {
     
-    _log("INFO", "Creating pipe_marketServer...");
+    _log("INFO", "Opening pipe_marketServer (write mode)...");
     
     // Buid the pipe path
     char *pipeMarketServerPath = getFileinBaseDirectoryPath(PIPE_MARKET_SERVER_NAME);
-    
-    // Create the pipe
-    if (mkfifo(pipeMarketServerPath, 0666) < 0) {
-        perror("Error when creating the pipe_marketServer");
-        exit(EXIT_FAILURE);
-    }
     
     // Open it
     int pipeDescriptor = open(pipeMarketServerPath, O_WRONLY);
@@ -46,6 +40,8 @@ int openMarketOrderPipe() {
         perror("Can not open the pipe_marketServer");
         exit(EXIT_FAILURE);
     }
+    
+    _log("INFO", "pipe_marketServer opened");
     
     free(pipeMarketServerPath);
     
@@ -61,6 +57,8 @@ int createAndOpenActorPipe(int actorPID) {
     
     char *actorPipeFullPath = getActorPipePath(actorPID);
     
+    _log("INFO", "Creating the actor pipe...");
+    
     // Create the pipe
     int mkfifoExecutionResult;
     if ((mkfifoExecutionResult = mkfifo(actorPipeFullPath, 0666)) < 0) {
@@ -74,12 +72,16 @@ int createAndOpenActorPipe(int actorPID) {
         }
     }
     
+    _log("INFO", "Opening the actor pipe (non-blocking)...");
+    
     // Open it
-    int actorPipeDescriptor = open(actorPipeFullPath, O_RDONLY);
+    int actorPipeDescriptor = open(actorPipeFullPath, O_RDONLY | O_NONBLOCK);
     if(actorPipeDescriptor < 0) {
         perror("Can not open in read mode the actor pipe");
         exit(EXIT_FAILURE);
     }
+    
+    _log("INFO", "Actor pipe opened");
     
     free(actorPipeFullPath);
     
@@ -115,4 +117,3 @@ char* getActorPipePath(int actorPID) {
     sprintf(actorPipeFullPath, "%s%d", pipeActorPrefix, actorPID);
     return actorPipeFullPath;
 }
-

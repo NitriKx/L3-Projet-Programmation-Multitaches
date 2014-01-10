@@ -60,6 +60,8 @@ int* sendRegisterOrder(int pipe_marketServer, int pipe_serverResponse) {
  **/
 struct transactionReport* sendTransactionOrder(int pipe_marketServer, int pipe_serverResponse, int maxQuantity, int maxPrice, int isBuy) {
     
+    _log("INFO", "Sending transaction...");
+    
     struct transactionReport *responseReport = malloc(sizeof(struct transactionReport));
     
     // For now the action type is 1 beacause we are working on the 1st objective
@@ -68,18 +70,29 @@ struct transactionReport* sendTransactionOrder(int pipe_marketServer, int pipe_s
     transmitedOrder.val1 = maxQuantity;
     transmitedOrder.val2 = maxPrice;
     
+    char logMessage[1024];
+    sprintf(logMessage, "Values :\nSender : %d\nisBuy : %d\nVal1 : %d\nVal2 : %d", transmitedOrder.sender, isBuy, transmitedOrder.val1, transmitedOrder.val2);
+    _log("INFO", logMessage);
+    
     if(isBuy > 0) {
         transmitedOrder.type = OT_BUY;
     } else {
         transmitedOrder.type = OT_SELL;
     }
     
+    _log("INFO", "Writing transaction...");
+    
     // Send the order to the market server
     write(pipe_marketServer, &transmitedOrder, sizeof(struct order));
     
-    // We block until we recieve the market server response
-    read(pipe_serverResponse, responseReport, sizeof(transmitedOrder));
+    _log("INFO", "Waiting for response...");
     
+    // We block until we recieve the market server response
+    read(pipe_serverResponse, responseReport, sizeof(struct order));
+    
+    sprintf(logMessage, "Server response : \nQuantity : %d / Total Cost %d", responseReport->quantity, responseReport->totalCost);
+    _log("INFO", logMessage);
+
     return responseReport;
 }
 
