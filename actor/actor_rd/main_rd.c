@@ -37,11 +37,11 @@ int getRandomValue (int low, int high);
 
 int main (int argc, const char * argv[])
 {
-
+    
     initialize();
     int isAlive = 1;
     
-    // Send random orders 
+    // Send random orders
     while(isAlive) {
         sendRandomBuyAndSellOrder();
         sleep(ORDER_DELAY);
@@ -55,7 +55,7 @@ int main (int argc, const char * argv[])
 void initialize () {
     pipe_marketOrder = openMarketOrderPipe();
     createActorPipe(getpid());
-
+    
     currentPrices = sendRegisterOrder(pipe_marketOrder, &pipe_serverResponse);
     
     values.money = ACTOR_INITIAL_MONEY;

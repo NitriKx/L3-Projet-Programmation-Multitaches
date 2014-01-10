@@ -34,7 +34,7 @@ struct transactionReport {
 /**
  Start the market server.
  @param _baseDirectory the directory which contains / will contains all the files needed by the market server
-**/
+ **/
 void startMarketServer(char *_baseDirectory);
 
 /**
@@ -100,7 +100,7 @@ void sendPriceToActor(int actorID, int actionType);
 /**
  This methos create and open the pipe_marketServer (named pipe).
  @return pipe descriptor
-**/
+ **/
 int createAndOpenMarketOrderPipe();
 
 /**
@@ -125,7 +125,7 @@ char* getActorPipePath(int actorPID);
 
 /**
  This method will delete all the file used by the marketServer.
-**/
+ **/
 void cleanupFilesAndPipes();
 
 

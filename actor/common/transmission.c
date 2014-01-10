@@ -30,7 +30,7 @@
  @param pipe_serverResponse  a file descriptor of the server response pipe
  **/
 int* sendRegisterOrder(int pipe_marketServer, int *pipe_serverResponse) {
-
+    
     _log("INFO", "Sending register order...");
     
     struct order registrationOrder;
@@ -113,7 +113,7 @@ struct transactionReport* sendTransactionOrder(int pipe_marketServer, int pipe_s
     
     sprintf(logMessage, "Server response : Quantity : %d / Total Cost %d", responseReport->quantity, responseReport->totalCost);
     _log("INFO", logMessage);
-
+    
     return responseReport;
 }
 

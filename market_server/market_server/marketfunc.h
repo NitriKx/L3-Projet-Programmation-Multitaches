@@ -15,10 +15,10 @@
 #define DEFAULT_ACTION_QTTY 50
 
 struct order{
-  int type;
-  int sender;
-  int val1;
-  int val2;
+    int type;
+    int sender;
+    int val1;
+    int val2;
 };
 
 

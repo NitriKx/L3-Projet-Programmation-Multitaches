@@ -174,7 +174,7 @@ void checkAlarmAndSendNotifications (int actorID) {
 /**
  Execute a buy/sell order. The server will try to buy/sell as many as possible actions considering the maximum/minimum price, and then transmit a transactionReport to the actor.
  @param order a pointer to the order read by the server containing the informations about transaction
-  **/
+ **/
 void executeOrderAndSendResponseToTheActor (struct order *order) {
     
     int actorID = findActorIDUsingActorPID(order->sender);
@@ -232,7 +232,7 @@ void executeOrderAndSendResponseToTheActor (struct order *order) {
                     // PRICE TOO LOW
                     sprintf(logMessage, "Actor %d can not sell action=[%d] (price=[%d] - minimum price=[%d])", actorID, 0, get_price(0), actorRegisteredData[actorID].nbStocks[0]);
                     _log("INFO", logMessage);
-                }              
+                }
                 
             } else {
                 // NO ENOUGHT ACTION
@@ -248,7 +248,7 @@ void executeOrderAndSendResponseToTheActor (struct order *order) {
         _log("ERROR", "Unknown transaction type !");
         return;
     }
-
+    
     sendTransactionReportToActor(&report, actorID);
     
     checkAlarmAndSendNotificationsForAllActor ();
@@ -257,7 +257,7 @@ void executeOrderAndSendResponseToTheActor (struct order *order) {
 /**
  Send a transaction report to an actor.
  @param report the transactionReport
- @param actorID the ID of the actor 
+ @param actorID the ID of the actor
  **/
 void sendTransactionReportToActor(struct transactionReport *report, int actorID) {
     write(actorRegisteredData[actorID].pipeDescriptor, report, sizeof(struct transactionReport));
@@ -265,7 +265,7 @@ void sendTransactionReportToActor(struct transactionReport *report, int actorID)
 
 /**
  Find the ID of the actor with a designated PID.
- @param actorPID the PID of the actor 
+ @param actorPID the PID of the actor
  @return the ID of the actor designated by the PID
  **/
 int findActorIDUsingActorPID(int actorPID) {
