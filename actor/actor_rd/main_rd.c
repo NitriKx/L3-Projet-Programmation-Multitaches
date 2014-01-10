@@ -26,8 +26,8 @@
 #include <time.h>
 
 int *currentPrices = NULL;
-int pipe_marketOrder;
-int pipe_serverResponse;
+int pipe_marketOrder = -1;
+int pipe_serverResponse = -1;
 
 struct actorData values;
 
@@ -54,7 +54,8 @@ int main (int argc, const char * argv[])
  **/
 void initialize () {
     pipe_marketOrder = openMarketOrderPipe();
-    pipe_serverResponse = createAndOpenActorPipe(getpid());
+    createActorPipe(getpid());
+
     currentPrices = sendRegisterOrder(pipe_marketOrder, pipe_serverResponse);
     
     values.money = ACTOR_INITIAL_MONEY;

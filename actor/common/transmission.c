@@ -30,6 +30,9 @@
  @param pipe_serverResponse  a file descriptor of the server response pipe
  **/
 int* sendRegisterOrder(int pipe_marketServer, int pipe_serverResponse) {
+
+    _log("INFO", "Sending register order...");
+    
     struct order registrationOrder;
     registrationOrder.sender = getpid();
     registrationOrder.type = OT_REGISTER;
@@ -37,12 +40,23 @@ int* sendRegisterOrder(int pipe_marketServer, int pipe_serverResponse) {
     // Send the registration
     write(pipe_marketServer, &registrationOrder, sizeof(struct order));
     
+    _log("INFO", "Register order sent. Opening the response tube...");
+    
+    // If the pipe is not already opened
+    if(pipe_serverResponse < 0) {
+        pipe_serverResponse = openActorPipe(getpid());
+    }
+    
+    _log("INFO", "Response pipe opened. Fetching prices...");
+    
     // Wait for all the action prices
     int i = 0;
     int *actionPrices = malloc(sizeof(int) * NB_TYPES_ACTIONS);
     for (i = 0; i < NB_TYPES_ACTIONS; i++) {
         read(pipe_serverResponse, &actionPrices[i], sizeof(int));
     }
+    
+    _log("INFO", "Prices fetched. Registration complete.");
     
     return actionPrices;
 }

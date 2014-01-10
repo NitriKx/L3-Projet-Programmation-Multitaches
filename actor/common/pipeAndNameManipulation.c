@@ -49,22 +49,23 @@ int openMarketOrderPipe() {
 }
 
 /**
- This method will create the actor pipe and will open it.
+ This method will create the actor pipe.
  @param actorPID the PID of the actor process
- @return a file descriptor on the opened pipe (only write)
  **/
-int createAndOpenActorPipe(int actorPID) {
-    
+void createActorPipe(int actorPID) {
     char *actorPipeFullPath = getActorPipePath(actorPID);
     
-    _log("INFO", "Creating the actor pipe...");
+    char logMessage[1024];
+    sprintf(logMessage, "Creating the actor pipe [%s]...", actorPipeFullPath);
+    _log("INFO", logMessage);
     
     // Create the pipe
     int mkfifoExecutionResult;
     if ((mkfifoExecutionResult = mkfifo(actorPipeFullPath, 0666)) < 0) {
         
         if(mkfifo(actorPipeFullPath, 0666) == EEXIST) {
-            printf("Communication pipe to actor=[%d] already exists ! Aborting...", actorPID);
+            sprintf(logMessage, "Pipe [%s] already exists. Aborting...", actorPipeFullPath);
+            _log("ERROR", logMessage);
             
         } else {
             perror("Error when creating a pipe to actor ");
@@ -72,22 +73,34 @@ int createAndOpenActorPipe(int actorPID) {
         }
     }
     
-    _log("INFO", "Opening the actor pipe (non-blocking)...");
+    sprintf(logMessage, "Created Actor pipe [%s]", actorPipeFullPath);
+    _log("INFO", logMessage);
+    
+    free(actorPipeFullPath);
+}
+
+/**
+ Blocking - Opens the actor pipe associated with this actor PID
+ @param actorPID the PID of the actor
+ @return a file descriptor pointing to the pipe
+ **/
+int openActorPipe(int actorPID) {
+    char *actorPipeFullPath = getActorPipePath(actorPID);
+    
+    _log("INFO", "Opening the actor pipe (blocking)...");
     
     // Open it
-    int actorPipeDescriptor = open(actorPipeFullPath, O_RDONLY | O_NONBLOCK);
+    int actorPipeDescriptor = open(actorPipeFullPath, O_RDONLY);
     if(actorPipeDescriptor < 0) {
         perror("Can not open in read mode the actor pipe");
         exit(EXIT_FAILURE);
     }
     
     _log("INFO", "Actor pipe opened");
-    
     free(actorPipeFullPath);
     
     return actorPipeDescriptor;
 }
-
 
 /**
  This method builds the full path for a path relative in the baseDirectory.
@@ -113,7 +126,7 @@ char* getFileinBaseDirectoryPath(char *pathInBaseDirectory) {
 char* getActorPipePath(int actorPID) {
     int pidMaxSize = 5 * sizeof(char);
     char *pipeActorPrefix = PIPE_ACTOR_PREFIX;
-    char *actorPipeFullPath = malloc((pidMaxSize + strlen(pipeActorPrefix) + 1) * sizeof(char));
-    sprintf(actorPipeFullPath, "%s%d", pipeActorPrefix, actorPID);
-    return actorPipeFullPath;
+    char *actorPipeName = malloc((pidMaxSize + strlen(pipeActorPrefix) + 1) * sizeof(char));
+    sprintf(actorPipeName, "%s%d", pipeActorPrefix, actorPID);
+    return getFileinBaseDirectoryPath(actorPipeName);
 }

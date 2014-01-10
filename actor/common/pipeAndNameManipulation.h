@@ -19,11 +19,17 @@
 int openMarketOrderPipe();
 
 /**
- This method will create the actor pipe and will open it.
+ This method will create the actor pipe.
  @param actorPID the PID of the actor process
- @return a file descriptor on the opened pipe (only write)
  **/
-int createAndOpenActorPipe(int actorPID);
+void createActorPipe(int actorPID);
+
+/**
+ Blocking - Opens the actor pipe associated with this actor PID
+ @param actorPID the PID of the actor
+ @return a file descriptor pointing to the pipe
+ **/
+int openActorPipe(int actorPID);
 
 /**
  This method builds the full path for a path relative in the baseDirectory.

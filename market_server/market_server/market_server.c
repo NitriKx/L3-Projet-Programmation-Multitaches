@@ -88,7 +88,7 @@ void listenForMarketOrders() {
         
         switch(readOrder->type) {
             case OT_REGISTER:
-                newActorRegistrationHandler(readOrder->val1);
+                newActorRegistrationHandler(readOrder->sender);
                 break;
             case OT_REQUEST_PRICE:
                 sendPriceToActor(readOrder->sender, readOrder->val1);
@@ -389,6 +389,6 @@ char* getActorPipePath(int actorPID) {
     char *pipeActorPrefix = PIPE_ACTOR_PREFIX;
     char *actorPipeFullPath = malloc((pidMaxSize + strlen(pipeActorPrefix) + 1) * sizeof(char));
     sprintf(actorPipeFullPath, "%s%d", pipeActorPrefix, actorPID);
-    return actorPipeFullPath;
+    return getFileinBaseDirectoryPath(actorPipeFullPath);
 }
 
