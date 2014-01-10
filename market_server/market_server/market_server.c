@@ -134,7 +134,7 @@ void registerAlarmForActor (struct order *order) {
  **/
 void checkAlarmAndSendNotificationsForAllActor () {
     int i;
-    for (i=0; i < NB_TYPES_ACTIONS; i++) {
+    for (i=0; i < nbActorRegistered; i++) {
         checkAlarmAndSendNotifications(i);
     }
 }
@@ -144,22 +144,28 @@ void checkAlarmAndSendNotificationsForAllActor () {
  @param actorID the ID of the actor
  **/
 void checkAlarmAndSendNotifications (int actorID) {
-    // Check the high alarm
-    int currentPriceHigh = get_price(actorRegisteredData[actorID].alarmHigh.actionType);
-    int currentPriceLow = get_price(actorRegisteredData[actorID].alarmHigh.actionType);
+    int actionTypeHigh = actorRegisteredData[actorID].alarmHigh.actionType;
+    int actionTypeLow = actorRegisteredData[actorID].alarmLow.actionType;
     
-    if (currentPriceHigh > actorRegisteredData[actorID].alarmHigh.price) {
-        kill(actorRegisteredData[actorID].pid, SIGUSR1);
-        char message[1024];
-        sprintf(message, "Sent HIGH ALARM for actor=[%d] - value=[%d]", actorID, currentPriceHigh);
-        _log("INFO", message);
-    }
     // Check the high alarm
-    if (currentPriceLow < actorRegisteredData[actorID].alarmLow.price) {
-        kill(actorRegisteredData[actorID].pid, SIGUSR2);
-        char message[1024];
-        sprintf(message, "Sent LOW ALARM for actor=[%d] - value=[%d]", actorID, currentPriceLow);
-        _log("INFO", message);
+    if (actionTypeHigh >= 0 && actionTypeHigh < NB_TYPES_ACTIONS) {
+        int currentPriceHigh = get_price(actionTypeHigh);
+        if (currentPriceHigh > actorRegisteredData[actorID].alarmHigh.price) {
+            kill(actorRegisteredData[actorID].pid, SIGUSR1);
+            char message[1024];
+            sprintf(message, "Sent HIGH ALARM for actor=[%d] - value=[%d]", actorID, currentPriceHigh);
+            _log("INFO", message);
+        }
+    }
+    // Check the low alarm
+    if (actionTypeLow >= 0 && actionTypeLow < NB_TYPES_ACTIONS) {
+        int currentPriceLow = get_price(actorRegisteredData[actorID].alarmHigh.actionType);
+        if (currentPriceLow < actorRegisteredData[actorID].alarmLow.price) {
+            kill(actorRegisteredData[actorID].pid, SIGUSR2);
+            char message[1024];
+            sprintf(message, "Sent LOW ALARM for actor=[%d] - value=[%d]", actorID, currentPriceLow);
+            _log("INFO", message);
+        }
     }
 }
 
