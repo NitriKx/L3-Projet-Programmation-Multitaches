@@ -53,7 +53,7 @@ int* sendRegisterOrder(int pipe_marketServer, int *pipe_serverResponse) {
     int i = 0;
     int *actionPrices = malloc(sizeof(int) * NB_TYPES_ACTIONS);
     for (i = 0; i < NB_TYPES_ACTIONS; i++) {
-        if(read(*pipe_serverResponse, &(actionPrices[i]), sizeof(int))) {
+        if(read(*pipe_serverResponse, &(actionPrices[i]), sizeof(int)) < 0) {
             _log("WARNING", "Can not fetch the prices.");
             perror("Can not fetch the prices");
             return NULL;
