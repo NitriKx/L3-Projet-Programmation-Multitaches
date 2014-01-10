@@ -180,7 +180,8 @@ void executeOrderAndSendResponseToTheActor (struct order *order) {
     int actorID = findActorIDUsingActorPID(order->sender);
     struct transactionReport report;
     report.quantity = 0;
-
+    report.totalCost = 0;
+    
     if (order->type == OT_BUY) {
         int i;
         int buyPrice;
@@ -217,7 +218,7 @@ void executeOrderAndSendResponseToTheActor (struct order *order) {
         int i;
         int sellPrice;
         for(i = 0; i < order->val1; i++) {
-            // If the maximum price was good enought
+            // If the minimum price was good enought
             if((sellPrice = sell(0, order->val2)) > 0) {
                 report.quantity++;
                 report.totalCost += sellPrice;
