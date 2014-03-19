@@ -66,8 +66,8 @@ void initialize () {
  Send random order (buy/sell) to the market server
  **/
 void sendRandomBuyAndSellOrder () {
-    int isBuy = getRandomValue(0, 1);
-    int quantity = getRandomValue(1, DEFAULT_ACTION_QTTY);
+    int isBuy = getRandomValue(0, 2);
+    int quantity = getRandomValue(1, 5);
     int maxPrice = getRandomValue(1, DEFAULT_ACTION_PRICE+50);
     
     sendTransactionOrder(pipe_marketOrder, pipe_serverResponse, quantity, maxPrice, isBuy);
